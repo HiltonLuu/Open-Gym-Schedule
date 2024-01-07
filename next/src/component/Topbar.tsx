@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import { UserButton } from "@clerk/nextjs";
-import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
-import { SignInButton } from "@clerk/nextjs";
 import {
   Popover,
   PopoverContent,
