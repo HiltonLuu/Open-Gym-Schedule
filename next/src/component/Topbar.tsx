@@ -199,7 +199,7 @@ export const Topbar = () => {
       let [dayOfWeek, month, day] = schedule.date.split(" ");
 
       if (selectedDateRange === "today") {
-        console.log("today");
+        //console.log("today");
 
         //checks that it belongs to same day, month and contains the same activity name
         return (
@@ -210,7 +210,7 @@ export const Topbar = () => {
           )
         );
       } else if (selectedDateRange === "week") {
-        console.log(weekSchedule);
+        //console.log(weekSchedule);
         //checks that it belongs to same week on the basis of the weekSchedule object and same activity name
         return (
           weekSchedule.some(
@@ -223,7 +223,7 @@ export const Topbar = () => {
           )
         );
       } else {
-        console.log("month");
+        //console.log("month");
         //checks that it belongs to same month and contains the same activity name
         return (
           month === currentMonth.toString() &&
@@ -261,7 +261,7 @@ export const Topbar = () => {
             ),
           };
 
-          console.log(eventData.end);
+          //console.log(eventData.end);
           //TODO
           event.location =
             (schedule.location == "Red Gym"
@@ -295,7 +295,7 @@ export const Topbar = () => {
 
         //  the resulting iCalendar string
         const icalString = vcalendar.toString();
-        console.log(icalString);
+        //console.log(icalString);
 
         // create a blob and download the file
         const blob = new Blob([icalString], {
