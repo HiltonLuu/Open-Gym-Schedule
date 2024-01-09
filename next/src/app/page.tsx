@@ -26,7 +26,7 @@ export default function Home() {
     if (dismissed) {
       setPopupVisible(false);
     } else {
-      //display popup if local storage isnt false
+      // display popup if local storage isnt false
       toast({
         title: "👋 Welcome",
         description:
@@ -37,6 +37,24 @@ export default function Home() {
           </ToastAction>
         ),
       });
+
+      setTimeout(() => {
+      toast({
+        title: "💡 Press to reveal event details",
+        action: (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="px-12 py-2 h-full w-full flex justify-center items-center"
+          >
+            <source src="/Interact.mp4" type="video/mp4"/>
+          </video>
+        ),
+      });
+      }, 6500);
+
     }
   }, [toast]);
 
