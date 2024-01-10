@@ -74,7 +74,7 @@ function HelpPopOver() {
                                         </div>
                                         <hr />
                                         <div className="pt-2 flex justify-center">
-                                            <p className="text-red-300">
+                                            <p className="text-red-600">
                                                 Made with ❤ by your fellow pack of 🦖
                                             </p>
                                         </div>

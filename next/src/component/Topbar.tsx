@@ -73,13 +73,13 @@ export const Topbar = () => {
     }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    console.log("activity", selectedActivity);
-    console.log("range", selectedDateRange);
+  //   console.log("activity", selectedActivity);
+  //   console.log("range", selectedDateRange);
 
 
-  }, [selectedActivity, selectedDateRange])
+  // }, [selectedActivity, selectedDateRange])
 
   const activityTheme = (activityElement: string) => {
     switch (true) {
@@ -311,20 +311,15 @@ export const Topbar = () => {
         const blob = new Blob([icalString], { type: "text/calendar;charset=utf-8" });
         const dataURI = URL.createObjectURL(blob);
 
-        if (navigator.userAgent.match(/ipad|iphone/i)) {
-          window.open(dataURI);
-        }
-        else {
-          // create a link element and trigger the download for non-iOS devices
-          const a = document.createElement("a");
-          a.href = dataURI;
-          a.download = "event.ics";
+        // create a link element and trigger the download
+        const a = document.createElement("a");
+        a.href = dataURI;
+        a.download = "event.ics";
 
-          document.body.appendChild(a); // append the link to the body
-          a.click(); // trigger a click on the link
+        document.body.appendChild(a); // append the link to the body
+        a.click(); // trigger a click on the link
 
-          document.body.removeChild(a); // remove the link from the DOM
-        }
+        document.body.removeChild(a); // remove the link from the DOM
         URL.revokeObjectURL(dataURI); // release the object URL
 
       } else {
@@ -351,7 +346,7 @@ export const Topbar = () => {
           {/* Calendar Popover */}
           <Popover>
             <PopoverTrigger asChild>
-              <button className="hover:bg-red-600 active:bg-red-500 hover:shadow-red-200 active:shadow-red-200 hover:shadow-md active:shadow-md rounded-lg p-0.5 text-zinc-600 hover:text-white active:text-white border border-white hover:border-zinc-200/50 transition-all duration-300">
+              <button className="hover:bg-red-600 active:bg-red-500 hover:shadow-red-200 active:shadow-red-200 hover:shadow-md active:shadow-md rounded-lg p-0.5 text-zinc-600 hover:text-white active:text-white border border-white hover:border-zinc-200/50 transition-colors duration-300">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -383,7 +378,7 @@ export const Topbar = () => {
             // schedulesList.length > 0 && (
             <Popover>
               <PopoverTrigger asChild>
-                <button className="hover:bg-red-600 active:bg-red-500 hover:shadow-red-200 active:shadow-red-200 hover:shadow-md active:shadow-md rounded-lg p-0.5 text-zinc-600 hover:text-white active:text-white border border-white hover:border-zinc-200/50 transition-all duration-300">
+                <button className="hover:bg-red-600 active:bg-red-500 active:bg-gradient-to-br hover:shadow-red-200 active:shadow-red-200 hover:shadow-md active:shadow-md rounded-lg p-0.5 text-zinc-600 hover:text-white active:text-white border border-white hover:border-zinc-200/50 transition-all duration-300">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -405,7 +400,8 @@ export const Topbar = () => {
               <PopoverContent className="w-96 rounded-md">
                 <>
                   <div className="flex justify-center w-full flex-col">
-                    <p className="text-zinc-200 flex justify-center m-auto text-sm mb-1">Schedules are subject to change</p>
+                    <p className="text-red-600 flex justify-center m-auto text-sm">Schedules are subject to change</p>
+                    <p className="text-zinc-400 flex justify-center m-auto text-xs mb-1">Safari may be unsupported</p>
                     {selectedError == true && (
                       <ErrorMessage errorMessage="Please select at least one activity" />
                     )}
@@ -518,8 +514,8 @@ export const Topbar = () => {
 
       <div className="hidden md:flex space-x-0.5 text-zinc-600">
         <button
-          className={`py-0.5 px-3 rounded-lg font-medium hover:shadow-md transition-all duration-700 hover:duration-300 ${scheduleView === "d"
-            ? "bg-red-600 text-white shadow-red-200 shadow-md border border-zinc-200/50"
+          className={`py-0.5 px-3 rounded-lg font-medium hover:shadow-md transition-colors duration-700 hover:duration-300 ${scheduleView === "d"
+            ? "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-red-200 shadow-md border border-zinc-200/50"
             : "text-zinc-500 bg-zinc-50 border border-zinc-200/50"
             }`}
           onClick={() => {
@@ -530,8 +526,8 @@ export const Topbar = () => {
         </button>
 
         <button
-          className={`py-0.5 px-4 rounded-lg font-medium hover:shadow-md transition-all duration-700 hover:duration-300 ${scheduleView === "w"
-            ? "bg-red-600 text-white shadow-red-200 shadow-md border border-zinc-200/50"
+          className={`py-0.5 px-4 rounded-lg font-medium hover:shadow-md transition-colors duration-700 hover:duration-300 ${scheduleView === "w"
+            ? "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-red-200 shadow-md border border-zinc-200/50"
             : "text-zinc-500 bg-zinc-50 border border-zinc-200/50"
             }`}
           onClick={() => {

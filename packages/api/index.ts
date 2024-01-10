@@ -39,22 +39,22 @@ process.on("SIGINT", () => {
 
 app.use(express.json());
 
-// import cron from 'node-cron';
-// cron.schedule("0 0 * * *", () => {
-// 	console.log("running a task every 10 minutes");
+import cron from 'node-cron';
+cron.schedule("0 0 * * *", () => {
+	console.log("running a task every 10 minutes");
 
-// 	scrapeSchedule().then(async (schedules) => {
-// 		try {
-// 			connectDB();
-// 			const result = await GymScheduleModel.deleteMany({}); // delete the current activities in the database
+	scrapeSchedule().then(async (schedules) => {
+		try {
+			connectDB();
+			const result = await GymScheduleModel.deleteMany({}); // delete the current activities in the database
 
-// 			for (let i = 0; i < schedules.length; i++) {
-// 				const newGymEvent = new GymScheduleModel(schedules[i]);
-// 				const savedGymSchedule = await newGymEvent.save(); // save the GymSchedule Document to the database
-// 				console.log(savedGymSchedule);
-// 			}
-// 		} catch (error) {
-// 			console.error("Error creating gym schedule:", error);
-// 		}
-// 	});
-// });
+			for (let i = 0; i < schedules.length; i++) {
+				const newGymEvent = new GymScheduleModel(schedules[i]);
+				const savedGymSchedule = await newGymEvent.save(); // save the GymSchedule Document to the database
+				console.log(savedGymSchedule);
+			}
+		} catch (error) {
+			console.error("Error creating gym schedule:", error);
+		}
+	});
+});
