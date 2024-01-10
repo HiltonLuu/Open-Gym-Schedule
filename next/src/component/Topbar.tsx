@@ -12,12 +12,13 @@ const ICAL = require("ical.js");
 import ErrorMessage from "./ErrorMessage";
 import { useDateStore, useScheduleStore, useScheduleViewStore } from "@/store";
 import { generateDaysOfWeek } from "@/lib/utilityFunctions";
+import { isDateRange } from "react-day-picker";
 
 export const Topbar = () => {
   //const { isSignedIn } = useAuth();
   const { date, setDate } = useDateStore();
   const { scheduleView, setScheduleView } = useScheduleViewStore();
-  const { scheduleList } = useScheduleStore();
+  const { initialList } = useScheduleStore();
   const [selectedDateRange, setSelectedDateRange] = useState("today");
   const [selectedActivity, setSelectedActivity] = useState<string[]>([]);
   const activityList = [
@@ -71,6 +72,14 @@ export const Topbar = () => {
       setDate(newDate);
     }
   };
+
+  useEffect(() => {
+
+    console.log("activity", selectedActivity);
+    console.log("range", selectedDateRange);
+
+
+  }, [selectedActivity, selectedDateRange])
 
   const activityTheme = (activityElement: string) => {
     switch (true) {
@@ -166,6 +175,7 @@ export const Topbar = () => {
    * @param context the activity pressed by the user
    */
   function toggleSelectedActivity(context: string) {
+
     if (selectedActivity.includes(context)) {
       //remove the activity if it already exists
       setSelectedActivity((prev: string[]) =>
@@ -181,7 +191,7 @@ export const Topbar = () => {
     const currentMonth = currentDate.toLocaleString("default", {
       month: "short",
     });
-    const formattedSchedulesList = scheduleList?.map((schedule) => {
+    const formattedSchedulesList = initialList?.map((schedule) => {
       return {
         ...schedule,
         activityName: schedule.activityName
@@ -267,8 +277,8 @@ export const Topbar = () => {
             (schedule.location == "Red Gym"
               ? " ♦️ "
               : schedule.location == "Gold Gym"
-              ? " ⭐ "
-              : " ⚪ ") + schedule.location;
+                ? " ⭐ "
+                : " ⚪ ") + schedule.location;
           event.summary =
             activityTheme(schedule.activityName).emoji +
             schedule.activityName +
@@ -298,21 +308,25 @@ export const Topbar = () => {
         //console.log(icalString);
 
         // create a blob and download the file
-        const blob = new Blob([icalString], {
-          type: "text/calendar;charset=utf-8",
-        });
+        const blob = new Blob([icalString], { type: "text/calendar;charset=utf-8" });
         const dataURI = URL.createObjectURL(blob);
 
-        // create a link element and trigger the download
-        const a = document.createElement("a");
-        a.href = dataURI;
-        a.download = "event.ics";
+        if (navigator.userAgent.match(/ipad|iphone/i)) {
+          window.open(dataURI);
+        }
+        else {
+          // create a link element and trigger the download for non-iOS devices
+          const a = document.createElement("a");
+          a.href = dataURI;
+          a.download = "event.ics";
 
-        document.body.appendChild(a); // append the link to the body
-        a.click(); // trigger a click on the link
+          document.body.appendChild(a); // append the link to the body
+          a.click(); // trigger a click on the link
 
-        document.body.removeChild(a); // remove the link from the DOM
+          document.body.removeChild(a); // remove the link from the DOM
+        }
         URL.revokeObjectURL(dataURI); // release the object URL
+
       } else {
         setSelectedError(false); // remove the previous error message
         setNoScheduleError(true); // show new error message
@@ -391,6 +405,7 @@ export const Topbar = () => {
               <PopoverContent className="w-96 rounded-md">
                 <>
                   <div className="flex justify-center w-full flex-col">
+                    <p className="text-zinc-200 flex justify-center m-auto text-sm mb-1">Schedules are subject to change</p>
                     {selectedError == true && (
                       <ErrorMessage errorMessage="Please select at least one activity" />
                     )}
@@ -400,11 +415,10 @@ export const Topbar = () => {
                     {/* Select Date */}
                     <div className="flex justify-evenly bg-zinc-100 rounded-full m-auto mt-4 w-[290px] min-w-fit h-fit">
                       <button
-                        className={`m-1 mx-1 w-fit text-xs font-medium py-2 px-6 transition-all duration-300 ${
-                          selectedDateRange == "today"
-                            ? "bg-white rounded-full shadow-md text-red-600"
-                            : "text-zinc-700 bg-none hover:text-black"
-                        }`}
+                        className={`m-1 mx-1 w-fit text-xs font-medium py-2 px-6 transition-all duration-300 ${selectedDateRange == "today"
+                          ? "bg-white rounded-full shadow-md text-red-600"
+                          : "text-zinc-700 bg-none hover:text-black"
+                          }`}
                         onClick={() => {
                           setSelectedDateRange("today");
                         }}
@@ -412,11 +426,10 @@ export const Topbar = () => {
                         TODAY
                       </button>
                       <button
-                        className={`m-1 mx-1 w-fit text-xs font-medium py-2 px-6 transition-all duration-300 ${
-                          selectedDateRange == "week"
-                            ? "bg-white rounded-full shadow-md text-red-600"
-                            : "text-zinc-700 bg-none hover:text-black"
-                        }`}
+                        className={`m-1 mx-1 w-fit text-xs font-medium py-2 px-6 transition-all duration-300 ${selectedDateRange == "week"
+                          ? "bg-white rounded-full shadow-md text-red-600"
+                          : "text-zinc-700 bg-none hover:text-black"
+                          }`}
                         onClick={() => {
                           setSelectedDateRange("week");
                         }}
@@ -424,11 +437,10 @@ export const Topbar = () => {
                         WEEK
                       </button>
                       <button
-                        className={`m-1 mx-1 w-fit text-xs font-medium py-2 px-6 transition-all duration-300 ${
-                          selectedDateRange == "month"
-                            ? "bg-white rounded-full shadow-md text-red-600"
-                            : "text-zinc-700 bg-none hover:text-black"
-                        }`}
+                        className={`m-1 mx-1 w-fit text-xs font-medium py-2 px-6 transition-all duration-300 ${selectedDateRange == "month"
+                          ? "bg-white rounded-full shadow-md text-red-600"
+                          : "text-zinc-700 bg-none hover:text-black"
+                          }`}
                         onClick={() => {
                           setSelectedDateRange("month");
                         }}
@@ -443,30 +455,25 @@ export const Topbar = () => {
                         <button
                           key={activityElement}
                           className={`border border-zinc-200 rounded-md m-0.5 p-4 flex flex-col items-center transition duration-300
-                          ${
-                            selectedActivity.includes(activityElement)
-                              ? `${
-                                  activityTheme(activityElement).bg
-                                } shadow-md filter-none`
+                          ${selectedActivity.includes(activityElement)
+                              ? `${activityTheme(activityElement).bg
+                              } shadow-md filter-none`
                               : "bg-none filter grayscale"
-                          }`}
+                            }`}
                           onClick={() => {
                             toggleSelectedActivity(activityElement);
                           }}
                         >
                           <span
-                            className={`${
-                              activityTheme(activityElement).dot
-                            } border-zinc-200 rounded-full text-lg p-0.5 px-1 ${
-                              activityElement !== "Open Gym" ? "px-1" : "px-1.5"
-                            }`}
+                            className={`${activityTheme(activityElement).dot
+                              } border-zinc-200 rounded-full text-lg p-0.5 px-1 ${activityElement !== "Open Gym" ? "px-1" : "px-1.5"
+                              }`}
                           >
                             {activityTheme(activityElement).emoji}
                           </span>
                           <span
-                            className={`text-xs ${
-                              activityTheme(activityElement).text
-                            } font-medium mt-0.5`}
+                            className={`text-xs ${activityTheme(activityElement).text
+                              } font-medium mt-0.5`}
                           >
                             {activityElement}
                           </span>
@@ -495,21 +502,26 @@ export const Topbar = () => {
       </div>
 
       <div className="md:hidden">
-        <Image
-          src="/active-living-logo.png"
-          alt="Active Living Logo"
-          width={40} // equivalent to w-10 in TailwindCSS (assuming 1rem = 16px)
-          height={40} // equivalent to h-10 in TailwindCSS
-        />
+        <a
+          href="https://active-living.ucalgary.ca/memberships-drop/gymnasium-drop"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/active-living-logo.png"
+            alt="Active Living Logo"
+            width={40} // equivalent to w-10 in TailwindCSS (assuming 1rem = 16px)
+            height={40} // equivalent to h-10 in TailwindCSS
+          />
+        </a>
       </div>
 
       <div className="hidden md:flex space-x-0.5 text-zinc-600">
         <button
-          className={`py-0.5 px-3 rounded-lg font-medium hover:shadow-md transition-all duration-700 hover:duration-300 ${
-            scheduleView === "d"
-              ? "bg-red-600 text-white shadow-red-200 shadow-md border border-zinc-200/50"
-              : "text-zinc-500 bg-zinc-50 border border-zinc-200/50"
-          }`}
+          className={`py-0.5 px-3 rounded-lg font-medium hover:shadow-md transition-all duration-700 hover:duration-300 ${scheduleView === "d"
+            ? "bg-red-600 text-white shadow-red-200 shadow-md border border-zinc-200/50"
+            : "text-zinc-500 bg-zinc-50 border border-zinc-200/50"
+            }`}
           onClick={() => {
             setScheduleView();
           }}
@@ -518,11 +530,10 @@ export const Topbar = () => {
         </button>
 
         <button
-          className={`py-0.5 px-4 rounded-lg font-medium hover:shadow-md transition-all duration-700 hover:duration-300 ${
-            scheduleView === "w"
-              ? "bg-red-600 text-white shadow-red-200 shadow-md border border-zinc-200/50"
-              : "text-zinc-500 bg-zinc-50 border border-zinc-200/50"
-          }`}
+          className={`py-0.5 px-4 rounded-lg font-medium hover:shadow-md transition-all duration-700 hover:duration-300 ${scheduleView === "w"
+            ? "bg-red-600 text-white shadow-red-200 shadow-md border border-zinc-200/50"
+            : "text-zinc-500 bg-zinc-50 border border-zinc-200/50"
+            }`}
           onClick={() => {
             setScheduleView();
           }}

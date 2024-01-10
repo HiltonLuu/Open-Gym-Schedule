@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { ActivityButton } from "./ActivityButton";
+import HelpPopOver from "./HelpPopOver";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +52,10 @@ export default function Nav() {
 
 
           <div className="flex flex-col mt-4 space-y-3 w-2/3 text-white">
-            <p className="text-blue-400">Choose Activity</p>
+            <div className="flex flex-row">
+              <p className="text-blue-400">Choose Activity</p>
+              <HelpPopOver/>
+            </div>
             <ActivityButton activity="Badminton" />
             <ActivityButton activity="Basketball" />
             <ActivityButton activity="Ball Hockey" />
