@@ -70,11 +70,11 @@ export interface ActivityTogglesState {
 
 export const useActivityToggleStore = create<ActivityTogglesState>((set) => ({
   Toggles: {
-    Badminton: false,
-    Basketball: false,
-    BallHockey: false,
-    Volleyball: false,
-    Soccer: false,
+    Badminton: true,
+    Basketball: true,
+    BallHockey: true,
+    Volleyball: true,
+    Soccer: true,
     OpenGym: true,
   },
   setActivityToggles: (newToggle) => {
